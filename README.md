@@ -1,6 +1,6 @@
 # Chatbot Project
 
-This is my chatbot made in django. It is a work in progress. 
+This is a 'Chatbot' project repository by [David Frankel](https://github.com/davidhfrankelcodes). 
 
 ## Project Structure
 
