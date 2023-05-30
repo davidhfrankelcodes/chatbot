@@ -1,6 +1,6 @@
 # Chatbot Project
 
-This is the 'Chatbot' project repository by [David Frankel](https://github.com/davidhfrankelcodes). This repository has one main commit and several files and directories. The project is primarily written in Python (73.7%), with some HTML (23.5%), and Dockerfile (2.8%).
+This is my chatbot made in django. It is a work in progress. 
 
 ## Project Structure
 
