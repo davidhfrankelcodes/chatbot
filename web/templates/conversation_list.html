@@ -1,0 +1,19 @@
+<!-- templates/conversation_list.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Conversations for {{ view.bot.name }}</h1>
+    <ul>
+        {% for conversation in object_list %}
+            <li>
+                <a href="{% url 'chat' bot_id=view.bot.id conversation_id=conversation.id %}">Conversation {{ conversation.id }}</a>
+                <!-- Add the delete button here -->
+                <a href="{% url 'conversation_delete' bot_id=view.bot.id pk=conversation.id %}" class="btn btn-danger">Delete</a>
+            </li>
+        {% empty %}
+            <li>No conversations available.</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'new_conversation' bot_id=view.bot.id %}" class="btn btn-primary">Create New Conversation</a>
+{% endblock %}

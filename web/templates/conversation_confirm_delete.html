@@ -1,0 +1,13 @@
+<!-- templates/web/conversation_confirm_delete.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Delete Conversation</h1>
+    <p>Are you sure you want to delete this conversation?</p>
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Yes, delete</button>
+        <a href="{% url 'conversation_list' bot_id=object.chatbot.id %}" class="btn btn-secondary">No, go back</a>
+    </form>
+{% endblock %}

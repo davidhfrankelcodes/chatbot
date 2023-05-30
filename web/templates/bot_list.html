@@ -1,0 +1,14 @@
+<!-- templates/bot_list.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Chatbots</h1>
+    <ul>
+        {% for bot in object_list %}
+            <li><a href="{% url 'conversation_list' bot.id %}">{{ bot.name }}</a></li>
+        {% empty %}
+            <li>No chatbots available.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
