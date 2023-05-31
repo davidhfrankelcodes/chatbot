@@ -22,6 +22,7 @@ openai==0.27.7
 openapi-schema-pydantic==1.2.4
 packaging==23.1
 pydantic==1.10.8
+python-dotenv==1.0.0
 PyYAML==6.0
 requests==2.31.0
 SQLAlchemy==2.0.15
