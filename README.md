@@ -44,3 +44,10 @@ To get started with the project, you should clone the repository, navigate to th
 
 To start the Django development server, you can use the command `python manage.py runserver`.
 
+## Environment variables
+
+Make a `.env` file at the project root. Fill these out.
+
+```
+DJANGO_HOST=
+```
