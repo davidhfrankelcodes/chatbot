@@ -3,6 +3,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+{% if user.is_authenticated %}
     <h1>{{ chat_name }}</h1>
     <ul id="message-list">
         {% for message in object_list %}
@@ -18,11 +19,13 @@
             <li>No messages in this conversation.</li>
         {% endfor %}
     </ul>
+    {% if user.is_authenticated %}
     <form id="message-form" method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Send</button>
     </form>
+    {% endif %}
     <script>
         $(document).ready(function() {
             $('#message-form').on('submit', function(event) {
@@ -54,4 +57,5 @@
             });
         });
     </script>
+{% endif %}
 {% endblock %}
