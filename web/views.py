@@ -1,4 +1,7 @@
 # web/views.py
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth import logout
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
@@ -9,6 +12,7 @@ from django.urls import reverse
 from django import forms
 from .models import ChatBot, Conversation, Message
 
+
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts.chat import HumanMessagePromptTemplate
 from langchain.schema import HumanMessage
@@ -17,17 +21,20 @@ human_template="{text}"
 human_message_prompt = HumanMessagePromptTemplate.from_template(human_template)
 
 
-class BotListView(ListView):
+class BotListView(LoginRequiredMixin, ListView):
     model = ChatBot
     template_name = 'bot_list.html'
+    login_url = '/login'
 
-class ConversationListView(ListView):
+class ConversationListView(LoginRequiredMixin, ListView):
     model = Conversation
     template_name = 'conversation_list.html'
+    login_url = '/login'
 
     def get_queryset(self):
         self.bot = get_object_or_404(ChatBot, id=self.kwargs['bot_id'])
-        return Conversation.objects.filter(chatbot=self.bot)
+        return Conversation.objects.filter(
+            chatbot=self.bot, user=self.request.user)
 
 class MessageForm(forms.ModelForm):
     class Meta:
@@ -50,11 +57,18 @@ class ConversationDeleteView(DeleteView):
 
     def get_success_url(self):
         return reverse('conversation_list', kwargs={'bot_id': self.object.chatbot.id})
-    
-class ChatView(FormMixin, ListView):
+
+class UserLoginView(LoginView):
+    template_name = 'login.html'
+
+class UserLogoutView(LogoutView):
+    template_name = 'logout.html'
+
+class ChatView(LoginRequiredMixin, FormMixin, ListView):
     model = Message
     form_class = MessageForm
     template_name = 'chat.html'
+    login_url = '/login'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

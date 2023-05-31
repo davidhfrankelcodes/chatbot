@@ -3,12 +3,17 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Chatbots</h1>
-    <ul>
-        {% for bot in object_list %}
-            <li><a href="{% url 'conversation_list' bot.id %}">{{ bot.name }}</a></li>
-        {% empty %}
-            <li>No chatbots available.</li>
-        {% endfor %}
-    </ul>
+{% if user.is_authenticated %}
+<h1>Chatbots</h1>
+<ul>
+    {% for bot in object_list %}
+    <li><a href="{% url 'conversation_list' bot.id %}">{{ bot.name }}</a></li>
+    {% empty %}
+    <li>No chatbots available.</li>
+    {% endfor %}
+</ul>
+{% else %}
+<h2>Log in to view Chatbots</h2>
+{% endif %}
+
 {% endblock %}
