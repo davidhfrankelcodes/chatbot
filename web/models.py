@@ -6,6 +6,9 @@ from langchain.memory import ConversationBufferMemory
 
 class ChatBot(models.Model):
     name = models.CharField(max_length=100)
+    system_message_prompt = models.CharField(
+        max_length=500, default="You are a helpful assistant.")
+
 
     def __str__(self):
         return self.name

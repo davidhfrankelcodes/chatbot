@@ -14,8 +14,11 @@ from .models import ChatBot, Conversation, Message
 
 
 from langchain.chat_models import ChatOpenAI
-from langchain.prompts.chat import HumanMessagePromptTemplate
-from langchain.schema import HumanMessage
+from langchain.prompts.chat import (
+    HumanMessagePromptTemplate, 
+    SystemMessagePromptTemplate,
+    ChatPromptTemplate,)
+from langchain.schema import HumanMessage, SystemMessage
 chat = ChatOpenAI(temperature=0)
 human_template="{text}"
 human_message_prompt = HumanMessagePromptTemplate.from_template(human_template)
@@ -100,6 +103,11 @@ class ChatView(LoginRequiredMixin, FormMixin, ListView):
         message_content = form.instance.text
         human_message = HumanMessage(content=message_content)
 
+        # Create the SystemMessagePromptTemplate from chatbot's system_message_prompt
+        system_message_prompt_template = SystemMessagePromptTemplate.from_template(
+            self.conversation.chatbot.system_message_prompt)
+
+
         # Ensure that the conversation's memory is not None
         memory = self.conversation.get_memory()
 
@@ -107,7 +115,10 @@ class ChatView(LoginRequiredMixin, FormMixin, ListView):
         memory.chat_memory.add_user_message(message_content)
 
         # Generate the bot's response based on the conversation history
-        bot_message_content = chat(memory.chat_memory.messages).content
+        chat_prompt = ChatPromptTemplate.from_messages(
+                    [system_message_prompt_template, human_message_prompt])
+        bot_message_content = chat(
+            chat_prompt.format_prompt(text=message_content).to_messages()).content
 
         # Add the bot's response to the conversation's memory
         memory.chat_memory.add_ai_message(bot_message_content)
