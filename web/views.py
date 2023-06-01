@@ -23,6 +23,11 @@ chat = ChatOpenAI(temperature=0)
 human_template="{text}"
 human_message_prompt = HumanMessagePromptTemplate.from_template(human_template)
 
+import logging
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
 
 class BotListView(LoginRequiredMixin, ListView):
     model = ChatBot
@@ -130,7 +135,8 @@ class ChatView(LoginRequiredMixin, FormMixin, ListView):
             chatbot=self.conversation.chatbot,
             text=bot_message_content,
         )
-
+        logger.info("user_message: %s", form.instance.text )
+        logger.info("bot_message: %s", bot_message.text )
         return JsonResponse({
             'user_message': form.instance.text,
             'bot_message': bot_message.text,
