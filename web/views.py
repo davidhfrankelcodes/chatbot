@@ -76,6 +76,7 @@ class ChatView(LoginRequiredMixin, FormMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['chat_name'] = self.conversation
+        context['bot_name'] = self.conversation.chatbot.name  # Add chatbot's name
         return context
     
     def get_queryset(self):
