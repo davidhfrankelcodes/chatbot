@@ -93,7 +93,6 @@ class ChatView(LoginRequiredMixin, FormMixin, ListView):
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
-
     def form_valid(self, form):
         form.instance.conversation = self.conversation
         form.instance.sender = self.request.user
@@ -101,12 +100,6 @@ class ChatView(LoginRequiredMixin, FormMixin, ListView):
 
         # Generate a response from the bot
         message_content = form.instance.text
-        human_message = HumanMessage(content=message_content)
-
-        # Create the SystemMessagePromptTemplate from chatbot's system_message_prompt
-        system_message_prompt_template = SystemMessagePromptTemplate.from_template(
-            self.conversation.chatbot.system_message_prompt)
-
 
         # Ensure that the conversation's memory is not None
         memory = self.conversation.get_memory()
@@ -114,11 +107,13 @@ class ChatView(LoginRequiredMixin, FormMixin, ListView):
         # Update the conversation's memory with the user's message
         memory.chat_memory.add_user_message(message_content)
 
-        # Generate the bot's response based on the conversation history
-        chat_prompt = ChatPromptTemplate.from_messages(
-                    [system_message_prompt_template, human_message_prompt])
+        # Get the historical conversation
+        previous_messages = memory.chat_memory.messages
+        
+        # Do the chat
         bot_message_content = chat(
-            chat_prompt.format_prompt(text=message_content).to_messages()).content
+            [SystemMessage(
+                content=self.conversation.chatbot.system_message_prompt)] + memory.chat_memory.messages).content
 
         # Add the bot's response to the conversation's memory
         memory.chat_memory.add_ai_message(bot_message_content)
