@@ -4,59 +4,62 @@
 
 {% block content %}
 {% if user.is_authenticated %}
-    <!-- Store bot name in a JavaScript variable -->
-    <script>var botName = "{{ bot_name }}";</script>
+<!-- Store bot name in a JavaScript variable -->
+<script>
+    var botName = "{{ bot_name }}";
+    var userName = "{{ user_name }}";
+</script>
 
-    <h1>{{ chat_name }}</h1>
-    <ul id="message-list">
-        {% for message in object_list %}
-            <li>
-                {% if message.sender %}
-                    {{ message.sender.username }}
-                {% else %}
-                    {{ message.chatbot.name }}
-                {% endif %}
-                : {{ message.text }}
-            </li>
-        {% empty %}
-            <li>No messages in this conversation.</li>
-        {% endfor %}
-    </ul>
-    <form id="message-form" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Send</button>
-    </form>
-    <script>
-        $(document).ready(function() {
-            $('#message-form').on('submit', function(event) {
-                event.preventDefault();
-        
-                // Save the user input before it's cleared by the AJAX call
-                var userInput = $('#id_text').val();
-        
-                // Append the user's message to the chat
-                $('#message-list').append('<li>david: ' + userInput + '</li>');
-        
-                // Append an empty message for the bot's response
-                $('#message-list').append('<li id="bot-response">chatbot01: </li>');
-        
-                $.ajax({
-                    url: '',
-                    type: 'post',
-                    data: $(this).serialize(),
-                    success: function(response) {
-                        // Replace the empty message with the bot's response
-                        $('#bot-response').text(botName + ': ' + response.bot_message);
-                        // Remove the id from the li element so it's not reused in subsequent messages
-                        $('#bot-response').removeAttr('id');
-                    }
-                });
-        
-                // Clear the user input
-                $('#id_text').val('');
+<h1>{{ chat_name }}</h1>
+<ul id="message-list">
+    {% for message in object_list %}
+    <li>
+        {% if message.sender %}
+        {{ message.sender.username }}
+        {% else %}
+        {{ message.chatbot.name }}
+        {% endif %}
+        : {{ message.text }}
+    </li>
+    {% empty %}
+    <li>No messages in this conversation.</li>
+    {% endfor %}
+</ul>
+<form id="message-form" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Send</button>
+</form>
+<script>
+    $(document).ready(function () {
+        $('#message-form').on('submit', function (event) {
+            event.preventDefault();
+
+            // Save the user input before it's cleared by the AJAX call
+            var userInput = $('#id_text').val();
+
+            // Append the user's message to the chat
+            $('#message-list').append('<li>' + userName + ': ' + userInput + '</li>');
+
+            // Append an empty message for the bot's response
+            $('#message-list').append('<li id="bot-response">' + botName + ': </li>');
+
+            $.ajax({
+                url: '',
+                type: 'post',
+                data: $(this).serialize(),
+                success: function (response) {
+                    // Replace the empty message with the bot's response
+                    $('#bot-response').text(botName + ': ' + response.bot_message);
+                    // Remove the id from the li element so it's not reused in subsequent messages
+                    $('#bot-response').removeAttr('id');
+                }
             });
+
+            // Clear the user input
+            $('#id_text').val('');
         });
-    </script>
+    });
+</script>
 {% endif %}
 {% endblock %}
