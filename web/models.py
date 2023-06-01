@@ -22,7 +22,7 @@ class Conversation(models.Model):
     
 
     def __str__(self):
-            return f'Conversation between {self.user.username} and {self.chatbot.name} ({self.start_time})'
+            return f'Conversation between {self.user.username} and {self.chatbot.name} ({str(self.start_time).split(".")[0]})'
     
 
     def get_memory(self):
