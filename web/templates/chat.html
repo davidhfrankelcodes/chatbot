@@ -4,6 +4,9 @@
 
 {% block content %}
 {% if user.is_authenticated %}
+    <!-- Store bot name in a JavaScript variable -->
+    <script>var botName = "{{ bot_name }}";</script>
+
     <h1>{{ chat_name }}</h1>
     <ul id="message-list">
         {% for message in object_list %}
@@ -19,13 +22,11 @@
             <li>No messages in this conversation.</li>
         {% endfor %}
     </ul>
-    {% if user.is_authenticated %}
     <form id="message-form" method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Send</button>
     </form>
-    {% endif %}
     <script>
         $(document).ready(function() {
             $('#message-form').on('submit', function(event) {
@@ -46,7 +47,7 @@
                     data: $(this).serialize(),
                     success: function(response) {
                         // Replace the empty message with the bot's response
-                        $('#bot-response').text('chatbot01: ' + response.bot_message);
+                        $('#bot-response').text(botName + ': ' + response.bot_message);
                         // Remove the id from the li element so it's not reused in subsequent messages
                         $('#bot-response').removeAttr('id');
                     }
