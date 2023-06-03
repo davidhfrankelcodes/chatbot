@@ -5,7 +5,7 @@ import pickle
 from langchain.memory import ConversationBufferMemory
 
 class ChatBot(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)  # Added unique=True
     system_message_prompt = models.CharField(
         max_length=500, default="You are a helpful assistant.")
 
