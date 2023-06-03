@@ -21,7 +21,8 @@ from langchain.prompts.chat import (
 from langchain.schema import HumanMessage, SystemMessage
 chat = ChatOpenAI(temperature=0)
 human_template="{text}"
-human_message_prompt = HumanMessagePromptTemplate.from_template(human_template)
+human_message_prompt = HumanMessagePromptTemplate.from_template(
+    human_template)
 
 import logging
 
@@ -116,6 +117,9 @@ class ChatView(LoginRequiredMixin, FormMixin, ListView):
 
         # Get the historical conversation
         previous_messages = memory.chat_memory.messages
+
+        # Log the memory
+        logger.info("Memory: %s", memory)
         
         # Do the chat
         bot_message_content = chat(
