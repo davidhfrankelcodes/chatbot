@@ -50,4 +50,8 @@ Make a `.env` file at the project root. Fill these out.
 
 ```
 DJANGO_HOST=
+HOST_PORT=
 ```
+
+- `DJANGO_HOST` is the host of the app that is reachable from the public internet
+- `HOST_PORT` is the port that the host serves the app on externally
